@@ -4,11 +4,11 @@ import RPi.GPIO as GPIO
 
 import random, os, fnmatch, pygame, sys, time
 
-
-def clear():
+# Clears the console
+def clr():
     os.system('clear')
 
-class Music:
+class theMusic:
     def __init__(self, filename):
         self.file_name = file_name
         self.frame_rate, self.amplitude = read(file_name)
@@ -24,8 +24,9 @@ class Music:
     def play():
         for i in range(len(self.amplitude) - 2):
             self.amplitude[i] = float(abs(self.amplitude[i]))/self.max_amplitude*50
+ 
 
-def reset_lights():
+def resetAll():
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(18, GPIO.OUT)
@@ -97,8 +98,8 @@ def main():
         pass
 
     song_total = float(len(amplitude)/frame_rate) # song time in seconds
-    clear()
-    reset_lights()
+    clr()
+    resetAll()
     amplitude = amplitude[::int(frame_skip)]
     print("loading song...")
     max_amplitude = max(amplitude)
