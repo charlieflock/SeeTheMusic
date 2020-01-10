@@ -5,9 +5,25 @@ import RPi.GPIO as GPIO
 import random, os, fnmatch, pygame, sys, time
 
 
-
 def clear():
     os.system('clear')
+
+class Music:
+    def __init__(self, filename):
+        self.file_name = file_name
+        self.frame_rate, self.amplitude = read(file_name)
+        self.frame_skip = self.frame_rate/1000.0
+        try:
+            self.amplitude = self.amplitude[:,0] + self.amplitude[:,1]
+        except:
+            pass
+        finally:
+            self.amplitude = self.amplitude[::int(frame_skip)]
+        self.song_total= float(len(self.amplitude)/self.frame_rate)
+        self.max_amplitude = max(amplitude)
+    def play():
+        for i in range(len(self.amplitude) - 2):
+            self.amplitude[i] = float(abs(self.amplitude[i]))/self.max_amplitude*50
 
 def reset_lights():
     GPIO.setmode(GPIO.BCM)
@@ -55,23 +71,6 @@ def display_amplitude(amplitude):
     else:
         GPIO.output(7,GPIO.LOW)
 
-class Music:
-    def __init__(self, filename):
-        self.file_name = file_name
-        self.frame_rate, self.amplitude = read(file_name)
-        self.frame_skip = self.frame_rate/1000.0
-        try:
-            self.amplitude = self.amplitude[:,0] + self.amplitude[:,1]
-        except:
-            pass
-        finally:
-            self.amplitude = self.amplitude[::int(frame_skip)]
-        self.song_total= float(len(self.amplitude)/self.frame_rate)
-        self.max_amplitude = max(amplitude)
-    def play():
-        for i in range(len(self.amplitude) - 2):
-            self.amplitude[i] = float(abs(self.amplitude[i]))/self.max_amplitude*50
-
 def main():
     # Colours for terminal text
     COLOUR = '\033[0;{}m'.format(random.randint(31,37))
@@ -100,14 +99,8 @@ def main():
     song_total = float(len(amplitude)/frame_rate) # song time in seconds
     clear()
     reset_lights()
-
-
     amplitude = amplitude[::int(frame_skip)]
-
     print("loading song...")
-
-
-
     max_amplitude = max(amplitude)
     for i in range(len(amplitude)- 2):
         amplitude[i] = float(abs(amplitude[i]))/max_amplitude*50
